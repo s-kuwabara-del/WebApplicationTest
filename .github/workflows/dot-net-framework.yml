@@ -46,3 +46,11 @@ jobs:
     # Execute all unit tests in the solution
     - name: Execute unit tests
       run: dotnet test $env:Test_Project_Path
+
+    # 成果物のアップロード
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: WebApp
+        path: ${{ github.workspace }}\app.zip
+        retention-days: 3
