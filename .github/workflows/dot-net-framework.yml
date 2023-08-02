@@ -34,11 +34,9 @@ jobs:
       uses: NuGet/setup-nuget@v1.2.0
 
     # NuGet パッケージの復元
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
-        
+    - name: Restore NuGet packages
+      run: nuget restore $env:Solution_Name
+       
     # Build 実行
     - name: Build the application
       run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
