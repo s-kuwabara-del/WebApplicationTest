@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        configuration: [Debug, Release]  
+        configuration: [Release]  
 
     runs-on: windows-latest
 
@@ -39,7 +39,7 @@ jobs:
        
     # Build 実行
     - name: Build the application
-      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=${{ github.workspace }}\publish /p:PrecompileBeforePublish=true /p:EnableUpdateable=false
       env:
         Configuration: ${{ matrix.configuration }}
       
