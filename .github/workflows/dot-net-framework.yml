@@ -1,0 +1,50 @@
+name: ASP.NET MVC (.NET Framework 4.8) to App Service
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]  
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: WebApplicationTest.sln
+      Test_Project_Path: WebApplicationTest.Tests/WebApplicationTest.Tests.csproj
+      
+    steps:
+    # チェックアウト
+    - name: Checkout
+      uses: actions/checkout@v3.5.3
+      with:
+        fetch-depth: 0
+
+    # msbuild のセットアップ
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1.3.1
+
+    # NuGet のセットアップ
+    - name: Setup NuGet.exe for use with actions
+      uses: NuGet/setup-nuget@v1.2.0
+
+    # NuGet パッケージの復元
+    - name: Restore the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+        
+    # Build 実行
+    - name: Build the application
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+      
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test $env:Test_Project_Path
