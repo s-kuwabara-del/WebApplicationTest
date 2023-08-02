@@ -52,5 +52,5 @@ jobs:
       uses: actions/upload-artifact@v3.1.2
       with:
         name: WebApp
-        path: ${{ github.workspace }}\app.zip
+        path: ${{ github.workspace }}\publish
         retention-days: 3
